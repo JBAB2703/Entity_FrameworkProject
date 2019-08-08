@@ -18,6 +18,15 @@ namespace Entity_FrameworkProject.Models {
         public double GPA { get; set; }
         public bool IsFulltime { get; set; } = true;
 
+        //int? is a new type and it allows an "int" to accept a null value
+        public int? MajorId { get; set; }
+        //"virtual" keyword, the first Major is the type and the second Major is the variable
+        public virtual Major Major { get; set; }
+
+        public override string ToString() {
+            return $"Id[{this.Id}], Name[{this.Firstname} {this.Lastname}]...";
+        }
+
         // must have a public default constructor
         public Student() {
 
