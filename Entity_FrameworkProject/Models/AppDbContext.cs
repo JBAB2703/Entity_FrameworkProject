@@ -18,6 +18,7 @@ namespace Entity_FrameworkProject.Models {
         public DbSet<Student> Students { get; set; }
         public DbSet<Major> Majors { get; set; }
         public DbSet<Course> Courses { get; set; }
+        public DbSet<Schedule> Schedules { get; set; }
 
     }
 }

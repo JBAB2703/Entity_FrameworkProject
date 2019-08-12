@@ -1,67 +1,105 @@
 ﻿using Entity_FrameworkProject.Models;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System;
 using System.Linq;
 
 namespace Entity_FrameworkProject {
-    class Program {
+    public class Program {
+
+        public static Student GetStudentByLastname(string lastname) {
+            var db = new AppDbContext();
+            var students = db.Students.Where(s => s.Lastname.Equals(lastname)).ToArray();
+            if(students.Count() == 0) {
+                return null;
+            } else {
+                return students[0];
+            }
+        }
+
+
+        public static Student GetStudentById(int id) {
+            var db = new AppDbContext();
+            return db.Students.Find(id);
+        }
+
         static void Main(string[] args) {
 
-            //always have to have the 
+           
 
+            //always have to have the var context = new AppDbContext();
+            //create an instance of the context
             var context = new AppDbContext();
+            //get the student
+            var student = context.Students.SingleOrDefault(s => s.Lastname == "Rogers");
+            //get the courses
+            var courses = context.Courses.Where(c => c.Name.Contains("101")).ToArray();
+            //schedule the student for all the courses
+            foreach (var course in courses) {
+                var schedule = new Schedule {
+                    StudentId = student.Id,
+                    CourseId = course.Id,
+                    Grade = -1,
 
-            var major = context.Majors.SingleOrDefault(m => m.Description == "eSports");
+                };
 
-            var course = new Course {
-                Name = "Minecraft 101",
-                Instructor = "B. Kyle",
-                Credit = 3,
-                MajorId = major.Id,
-            };
-            context.Courses.Add(course);
+                    context.Schedules.Add(schedule);
+            }
+            
+        
 
-            major = context.Majors.SingleOrDefault(m => m.Description == "Theater");
-
-            course = new Course {
-                Name = "Marvel 101",
-                Instructor = "A. Kyle",
-                Credit = 5,
-                MajorId = major.Id,
-            };
-            context.Courses.Add(course);
-
-            major = context.Majors.SingleOrDefault(m => m.Description == "Biology");
-
-            course = new Course {
-                Name = "Ice Age 201",
-                Instructor = "S. Sloth",
-                Credit = 4,
-                MajorId = major.Id,
-            };
-            context.Courses.Add(course);
-
-            major = context.Majors.SingleOrDefault(m => m.Description == "Golf Science");
-
-            course = new Course {
-                Name = "Slice 304",
-                Instructor = "B. Watson",
-                Credit = 4,
-                MajorId = major.Id,
-            };
-            context.Courses.Add(course);
-
-            major = context.Majors.SingleOrDefault(m => m.Description == "History");
-
-            course = new Course {
-                Name = "American History",
-                Instructor = "G. Washington",
-                Credit = 4,
-                MajorId = major.Id,
-            };
-            context.Courses.Add(course);
-
-
+            //save to the database
             context.SaveChanges();
+
+            //var major = context.Majors.SingleOrDefault(m => m.Description == "eSports");
+
+            //var course = new Course {
+            //    Name = "Minecraft 101",
+            //    Instructor = "B. Kyle",
+            //    Credit = 3,
+            //    MajorId = major.Id,
+            //};
+            //context.Courses.Add(course);
+
+            //major = context.Majors.SingleOrDefault(m => m.Description == "Theater");
+
+            //course = new Course {
+            //    Name = "Marvel 101",
+            //    Instructor = "A. Kyle",
+            //    Credit = 5,
+            //    MajorId = major.Id,
+            //};
+            //context.Courses.Add(course);
+
+            //major = context.Majors.SingleOrDefault(m => m.Description == "Biology");
+
+            //course = new Course {
+            //    Name = "Ice Age 201",
+            //    Instructor = "S. Sloth",
+            //    Credit = 4,
+            //    MajorId = major.Id,
+            //};
+            //context.Courses.Add(course);
+
+            //major = context.Majors.SingleOrDefault(m => m.Description == "Golf Science");
+
+            //course = new Course {
+            //    Name = "Slice 304",
+            //    Instructor = "B. Watson",
+            //    Credit = 4,
+            //    MajorId = major.Id,
+            //};
+            //context.Courses.Add(course);
+
+            //major = context.Majors.SingleOrDefault(m => m.Description == "History");
+
+            //course = new Course {
+            //    Name = "American History",
+            //    Instructor = "G. Washington",
+            //    Credit = 4,
+            //    MajorId = major.Id,
+            //};
+            //context.Courses.Add(course);
 
 
             //var major = context.Majors.SingleOrDefault(m => m.Description == "eSports");
@@ -122,10 +160,13 @@ namespace Entity_FrameworkProject {
             //    IsFulltime = false,
             //    MajorId = major.Id,
             //};
-            
-           
-        }
-        
+
+
+            //var major = new Major();
+            //major.Id = 0;
+            //major.Description = "Nursing";
+            //major.MinSat = 1100;
+            //context.Majors.Add(major);
 
             //removing data in the table
             //var major = context.Majors.Find(5);
@@ -134,7 +175,7 @@ namespace Entity_FrameworkProject {
             //change in the table
             //var major = context.Majors.Find(2);
             //if(major == null) {
-                //throw new Exception("Not Found");
+            //throw new Exception("Not Found");
             //}
             //major.Description = "Math";
             //major.MinSat = 1300;
@@ -201,7 +242,7 @@ namespace Entity_FrameworkProject {
             //major.MinSat = 1500;
             //context.Majors.Add(major);
 
-            
+
 
             //always start with the context then table collection and then a method
             //".ToList(); is called an extension method and can operate on anything that is a collection
@@ -226,15 +267,15 @@ namespace Entity_FrameworkProject {
 
             //Console.WriteLine($"The average SAT score is {studentAverageSAT}");
 
-           // var students = context.Students
-                                        //.Where(student => student.Major != null)
-                                        //.OrderBy(student => student.Major.Description)
-                                        //.ToList();
+            // var students = context.Students
+            //.Where(student => student.Major != null)
+            //.OrderBy(student => student.Major.Description)
+            //.ToList();
 
             //foreach (var student in students) {
-                //var major = (student.Major == null) ? "Undeclared" : student.Major.Description;
-                //Console.WriteLine(student);
-           //}
-        
+            //var major = (student.Major == null) ? "Undeclared" : student.Major.Description;
+            //Console.WriteLine(student);
+            //}
+            }
     }
 }
